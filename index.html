@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>Insights</title>
+    <meta charset="utf-8" />
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="price_dist_chart.js"></script>
+    <script type="text/javascript" src="helper.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin&display=swap" rel="stylesheet">
+    <script src="//unpkg.com/d3-radial-axis"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>💤</text></svg>">
+</head>
+
+<body style="text-align: center; background-color: #fbfbfb; ">
+  <svg height="700" width="800" class="priceDistVis"></svg>
+  <script>
+    let PI = Math.PI;
+    let padding = 25;
+
+    let textColor = "#696969";
+    let blueArcColor = "#7389AE";
+    let allNighterColor = "#F4B266"; // orange
+    let backgroundColor = "#e8e8e8";
+    let darkGreyColor = "#282828";
+    let greenColor = "#709970";
+
+    const getDataAndDrawVis = async() => {
+      drawPriceChart(".priceDistVis");
+    }
+
+    getDataAndDrawVis();
+  </script>
+</body>
+</html>
