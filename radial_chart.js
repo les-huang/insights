@@ -5,7 +5,7 @@ function drawRadialChart(svgClass) {
     let center = 150;
     let outerRadius = 250;
 
-    let centerX = 800/2;
+    let centerX = 900/2;
     let centerY = 700/2;
 
     let data = [
@@ -156,7 +156,60 @@ function drawRadialChart(svgClass) {
     addAnnotation(svg, centerX, centerY, xByDay, 4, discountData[4].sales, true, [
         "may is the best time",
         "to apply discounts to your pricing"
-    ], "orange", true)
+    ], "orange", true);
+
+    // add legend for total sales
+    let radialScale = d3.scaleRadial()
+        .domain([0, 12000])
+        .range([0, 50]);
+    let topArcGenerator = d3.arc()
+        .outerRadius(radialScale(12000))
+        .innerRadius(0)
+        .startAngle(-Math.PI / 2)
+        .endAngle(Math.PI / 2);
+    svg.append("path")
+        .attr("transform", "translate(" + 750 + "," + 100 + ")rotate(180)")
+        .attr("d", topArcGenerator())
+        .style("fill", greenColor)
+        .style("opacity", 0.9);
+    let botArcGenerator = d3.arc()
+        .outerRadius(radialScale(5000))
+        .innerRadius(0)
+        .startAngle(-Math.PI / 2)
+        .endAngle(Math.PI / 2);
+    svg.append("path")
+        .attr("transform", "translate(" + 750 + "," + 100 + ")")
+        .attr("d", botArcGenerator())
+        .style("fill", allNighterColor)
+        .style("opacity", 0.9);
+    svg.append("text")
+        .attr("x", 750)
+        .attr("y", 60)
+        .text("without discounts")
+        .style("font-family", "Cabin")
+        .style("text-anchor", "middle")
+        .style("font-size", 12)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", 750)
+        .attr("y", 170)
+        .text("with discounts")
+        .style("font-family", "Cabin")
+        .style("text-anchor", "middle")
+        .style("font-size", 12)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", 810)
+        .attr("y", 100)
+        .text("total sales")
+        .style("font-family", "Cabin")
+        .style("text-anchor", "start")
+        .style("alignment-baseline", "middle")
+        .style("font-size", 12)
+        .style("font-weight", "bold")
+        .style("fill", textColor);
+
+
 }
 
 function createFakePieData() {
