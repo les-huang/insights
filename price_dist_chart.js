@@ -93,7 +93,7 @@ svg.append("rect")
     .attr("height", height-padding*5)
     .style("opacity", 0)
     .on("mousemove", function(d) {
-    let price = getXFromEvent(d3.mouse(this)[0]);
+    let price = getXFromEvent(d3.pointer(d)[0]);
     circle.attr("transform", "translate("+ priceX(price) +","+ salesY(fakeData[price].sales) +")")
         .style("opacity", 1);
     circleText.attr("x", priceX(price))
