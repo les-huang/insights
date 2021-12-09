@@ -6,7 +6,6 @@ let width = svgWidth-offset;
 let padding = 50;
 
 let svg = d3.select(svgClass);
-
 let extentPrice = d3.extent(data.distribution, function (d) { return d.price});
 let extentSales = d3.extent(data.distribution, function (d) { return d.sales});
 
@@ -33,7 +32,8 @@ svg.append("path")
     .attr("d", d3.line()
         .x(function(d) { return priceX(d.price) })
         .y(function(d) { return salesY(d.sales) })
-        .curve(d3.curveCatmullRom.alpha(0.5))
+        .curve(d3.curveStepAfter)
+        // .curve(d3.curveMonotoneX)
     );
 
 // add axis + labels
@@ -42,17 +42,18 @@ svg.append("g").call(d3.axisLeft(salesY).ticks(5))
     .style("font-family", "Cabin")
     .style("font-size", 12)
     .select(".domain").remove();
-svg.append("g").call(d3.axisBottom(priceX).ticks(5).tickFormat(d => ("$" + String(d).charAt(0) + ".00")))
+svg.append("g").call(d3.axisBottom(priceX).ticks(5).tickFormat(d => ("$" + d + ".00")))
     .attr("transform", "translate(" + 0 + ","+(height-padding*1.5)+")")
     .style("font-family", "Cabin")
     .style("font-size", 12)
     .select(".domain").remove();
 addAxisText(svg, offset+(width-padding*2)/2, height-padding/2, "Price of " + data.item, true);
-addAxisText(svg, -1*((width-padding*2)/2)-offset/2, offset, "Transactions", false);
+addAxisText(svg, -1*((width-padding*2)/2)-offset*0.8, offset, "Avg Weekly Units Sold", false);
 
 
 // add tooltip for seller's current price + median price
-// addLineChartToolTip(svg, "seller_tooltip", priceX(3), salesY(0), salesY(fakeData[3].sales))
+let sellerPrice = data.seller_current_price;
+// addLineChartToolTip(svg, "seller_tooltip", priceX(sellerPrice), salesY(0), salesY(fakeData[3].sales))
 // addAnnotationText(svg, "seller_tooltip", priceX(3)+padding/2, salesY(fakeData[3].sales)+padding/4, 14, textColor,
 //     [
 //         "your current price"

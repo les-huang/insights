@@ -33,20 +33,20 @@
     let darkGreyColor = "#282828";
     let greenColor = "#709970";
 
+    let merchantToken = 'FE3MV5ZDXP8WQ';
     const getInitialLineChartData = async() => {
-        var url = 'http://0.0.0.0:8080/prices/item/Cookies';
+        var url = 'http://localhost:8080/prices/item/100%20grand?merchantToken=' + merchantToken;
         let response = await fetch(url);
         let data = await response.json();
         return data;
     }
 
     const getCategories = async() => {
-        let fakeData = {
-            "Food": ["Cookies", "Bread"],
-            "Health": ["Band-aids", "Cough Drops"],
-            "Beverage": ["Arizona Tea"]
-        }
-        return fakeData;
+        var url = 'http://localhost:8080/prices/merchant/' + merchantToken;
+        let response = await fetch(url);
+        let data = await response.json();
+        console.log(data)
+        return data.categories;
     }
 
     getInitialLineChartData().then(data => {
@@ -71,28 +71,44 @@
 
     getCategories().then(data => {
         var dropdown = document.getElementById("dropdown");
-        for (var cat of Object.keys(data)) {
+        var catToIndex = {};
+        for (var i = 0; i < data.length; i++) {
             var option = document.createElement("option");
+            var cat = data[i].category;
             option.text = cat;
             dropdown.add(option);
+
+            catToIndex[cat] = i;
         }
         dropdown.addEventListener("change", function(d) {
             let newCat = d3.select(this).property("value");
-            let temp = data[newCat][0].replace(/\s/g, '');
-            changeFilters(data[newCat][0]).then(function(newData) {
+            var itemLst = data[catToIndex[newCat]].items;
+            var itemLstB = itemLst.sort();
+            let temp = itemLstB[0].item.replace(/\s/g, '');
+            changeFilters(itemLstB[0].item).then(function(newData) {
                 d3.select(".priceDistVis").selectAll("*").remove();
                 drawPriceChart(".priceDistVis", newData);
-                addFilters(".priceDistVis", data[newCat], temp);
+                addFilters(".priceDistVis", getItemsFromCategory(itemLstB), temp);
             });
-        })
-        addFilters(".priceDistVis", data[Object.keys(data)[0]], data[Object.keys(data)[0]][0].replace(/\s/g, ''));
+        });
+        var lst = getItemsFromCategory(data[0].items);
+        var lstA = lst.sort();
+        addFilters(".priceDistVis", lstA, lstA[0].replace(/\s/g, ''));
     });
 
     async function changeFilters(item) {
-        var url = 'http://0.0.0.0:8080/prices/item/' + item;
+        var url = 'http://0.0.0.0:8080/prices/item/' + item + '?merchantToken=' + merchantToken;
         let response = await fetch(url);
         let data = await response.json();
         return data;
+    }
+
+    function getItemsFromCategory(data) {
+        let newLst = [];
+        for (var d of data) {
+            newLst.push(d.item);
+        }
+        return newLst;
     }
   </script>
 </body>

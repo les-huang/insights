@@ -1,3 +1,5 @@
+// data: array of all items
+// selectedItem: string
 function addFilters(svgClass, data, selectedItem) {
     let svg = d3.select(svgClass);
     let width = 150;
@@ -7,6 +9,7 @@ function addFilters(svgClass, data, selectedItem) {
     let itemLst = data;
     var counter = 0;
     for (var item of itemLst) {
+        console.log(item)
         let itemName = item.replace(/\s/g, '');
         svg.append("rect")
             .attr("class", "filter")

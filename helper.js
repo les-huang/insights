@@ -23,7 +23,7 @@ function addAxisText(svg, x, y, text, isX) {
     .text(text)
     .attr("transform", isX ? "translate(0,0)" : "rotate(-90)")
     .style("font-family", "Cabin")
-    .style("text-anchor", "center")
+    .style("text-anchor", "middle")
     .style("font-weight", "bold")
     .style("font-size", 14);
 }
