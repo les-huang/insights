@@ -16,6 +16,18 @@ function addAnnotationText(svg, id, x, y, fontsize, textColor, textLst, isAlignR
     }
 }
 
+function addAxisText(svg, x, y, text, isX) {
+    svg.append("text")
+    .attr("x", x)
+    .attr("y", y)
+    .text(text)
+    .attr("transform", isX ? "translate(0,0)" : "rotate(-90)")
+    .style("font-family", "Cabin")
+    .style("text-anchor", "center")
+    .style("font-weight", "bold")
+    .style("font-size", 14);
+}
+
 
 function addLineChartToolTip(svg, id, x, y1, y2, lineColor = darkGreyColor) {
     svg.append("line")

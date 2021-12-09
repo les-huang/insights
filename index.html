@@ -6,6 +6,8 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script type="text/javascript" src="price_dist_chart.js"></script>
     <script type="text/javascript" src="radial_chart.js"></script>
+    <script type="text/javascript" src="filter.js"></script>
+    <script type="text/javascript" src="scatter_plot.js"></script>
     <script type="text/javascript" src="helper.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cabin&display=swap" rel="stylesheet">
     <script src="//unpkg.com/d3-radial-axis"></script>
@@ -14,7 +16,9 @@
 </head>
 
 <body style="text-align: center; background-color: #fbfbfb; ">
-  <svg height="700" width="800" class="priceDistVis"></svg>
+    <select name="Categories" id="dropdown" style="padding: 10px; font-family: 'Cabin'; font-weight: bold;">
+    </select>
+  <svg height="500" width="700" class="priceDistVis"></svg>
   <svg height="700" width="900" class="radialTimeVis"></svg>
   <script>
     let PI = Math.PI;
@@ -27,19 +31,52 @@
     let darkGreyColor = "#282828";
     let greenColor = "#709970";
 
-    const getDataAndDrawVis = async() => {
+    const getInitialLineChartData = async() => {
         var url = 'http://0.0.0.0:8080/prices/item/Cookies';
         let response = await fetch(url);
-        console.log(response);
         let data = await response.json();
         return data;
-        // drawPriceChart(".priceDistVis");
-        // drawRadialChart(".radialTimeVis");
     }
 
-    getDataAndDrawVis().then(data => console.log(data)
+    const getCategories = async() => {
+        let fakeData = {
+            "Food": ["Cookies", "Bread"],
+            "Health": ["Band-aids", "Cough Drops"],
+            "Beverage": ["Arizona Tea"]
+        }
+        return fakeData;
+    }
 
-    );
+    getInitialLineChartData().then(data => {
+        drawPriceChart(".priceDistVis", data);
+        drawRadialChart(".radialTimeVis");
+    });
+
+    getCategories().then(data => {
+        var dropdown = document.getElementById("dropdown");
+        for (var cat of Object.keys(data)) {
+            var option = document.createElement("option");
+            option.text = cat;
+            dropdown.add(option);
+        }
+        dropdown.addEventListener("change", function(d) {
+            let newCat = d3.select(this).property("value");
+            let temp = data[newCat][0].replace(/\s/g, '');
+            changeFilters(data[newCat][0]).then(function(newData) {
+                d3.select(".priceDistVis").selectAll("*").remove();
+                drawPriceChart(".priceDistVis", newData);
+                addFilters(".priceDistVis", data[newCat], temp);
+            });
+        })
+        addFilters(".priceDistVis", data[Object.keys(data)[0]], data[Object.keys(data)[0]][0].replace(/\s/g, ''));
+    });
+
+    async function changeFilters(item) {
+        var url = 'http://0.0.0.0:8080/prices/item/' + item;
+        let response = await fetch(url);
+        let data = await response.json();
+        return data;
+    }
   </script>
 </body>
 </html>
