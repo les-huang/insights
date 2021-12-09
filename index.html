@@ -28,11 +28,18 @@
     let greenColor = "#709970";
 
     const getDataAndDrawVis = async() => {
-      drawPriceChart(".priceDistVis");
-      drawRadialChart(".radialTimeVis");
+        var url = 'http://0.0.0.0:8080/prices/item/Cookies';
+        let response = await fetch(url);
+        console.log(response);
+        let data = await response.json();
+        return data;
+        // drawPriceChart(".priceDistVis");
+        // drawRadialChart(".radialTimeVis");
     }
 
-    getDataAndDrawVis();
+    getDataAndDrawVis().then(data => console.log(data)
+
+    );
   </script>
 </body>
 </html>
