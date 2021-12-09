@@ -20,6 +20,8 @@
     </select>
   <svg height="500" width="700" class="priceDistVis"></svg>
   <svg height="700" width="900" class="radialTimeVis"></svg>
+  <svg height="700" width="600" class="scatterVis"></svg>
+
   <script>
     let PI = Math.PI;
     let padding = 25;
@@ -50,6 +52,21 @@
     getInitialLineChartData().then(data => {
         drawPriceChart(".priceDistVis", data);
         drawRadialChart(".radialTimeVis");
+
+        let fakeData = [
+            {"x": 50, "y": 900},
+            {"x": 70, "y": 200},
+            {"x": 72, "y": 300},
+            {"x": 36, "y": 400},
+            {"x": 50, "y": 750},
+            {"x": 94, "y": 850},
+            {"x": 28, "y": 550},
+            {"x": 85, "y": 220},
+            {"x": 62, "y": 890},
+            {"x": 98, "y": 70},
+            {"x": 34, "y": 90},
+        ]
+        drawScatterPlot(".scatterVis", fakeData);
     });
 
     getCategories().then(data => {
