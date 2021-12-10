@@ -48,7 +48,7 @@ svg.append("g").call(d3.axisBottom(priceX).ticks(5).tickFormat(d => ("$" + d + "
     .style("font-size", 12)
     .select(".domain").remove();
 addAxisText(svg, offset+(width-padding*2)/2, height-padding/2, "Price of " + data.item, true);
-addAxisText(svg, -1*((width-padding*2)/2)-offset*0.8, offset, "Avg Weekly Units Sold", false);
+addAxisText(svg, -1*((width-padding*2)/2)-offset*0.4, offset, "Avg Weekly Units Sold", false);
 
 
 // add tooltip for seller's current price + median price

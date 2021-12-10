@@ -45,28 +45,19 @@
         var url = 'http://localhost:8080/prices/merchant/' + merchantToken;
         let response = await fetch(url);
         let data = await response.json();
-        console.log(data)
         return data.categories;
+    }
+
+    const getScatterChartData = async() => {
+        var url = 'http://localhost:8080/discount/merchant/'+ merchantToken +'?week=2021-11-29&ignoreZero=true';
+        let response = await fetch(url);
+        let data = await response.json();
+        return data;
     }
 
     getInitialLineChartData().then(data => {
         drawPriceChart(".priceDistVis", data);
         drawRadialChart(".radialTimeVis");
-
-        let fakeData = [
-            {"x": 50, "y": 900},
-            {"x": 70, "y": 200},
-            {"x": 72, "y": 300},
-            {"x": 36, "y": 400},
-            {"x": 50, "y": 750},
-            {"x": 94, "y": 850},
-            {"x": 28, "y": 550},
-            {"x": 85, "y": 220},
-            {"x": 62, "y": 890},
-            {"x": 98, "y": 70},
-            {"x": 34, "y": 90},
-        ]
-        drawScatterPlot(".scatterVis", fakeData);
     });
 
     getCategories().then(data => {
@@ -83,17 +74,17 @@
         dropdown.addEventListener("change", function(d) {
             let newCat = d3.select(this).property("value");
             var itemLst = data[catToIndex[newCat]].items;
-            var itemLstB = itemLst.sort();
-            let temp = itemLstB[0].item.replace(/\s/g, '');
-            changeFilters(itemLstB[0].item).then(function(newData) {
+            var itemLstB = getItemsFromCategory(itemLst).sort()
+            let temp = itemLstB[0].replace(/\s/g, '');
+            changeFilters(itemLstB[0]).then(function(newData) {
                 d3.select(".priceDistVis").selectAll("*").remove();
                 drawPriceChart(".priceDistVis", newData);
-                addFilters(".priceDistVis", getItemsFromCategory(itemLstB), temp);
+                addFilters(".priceDistVis", itemLstB.slice(0, 7), temp);
             });
         });
         var lst = getItemsFromCategory(data[0].items);
         var lstA = lst.sort();
-        addFilters(".priceDistVis", lstA, lstA[0].replace(/\s/g, ''));
+        addFilters(".priceDistVis", lstA.slice(0, 7), lstA[0].replace(/\s/g, ''));
     });
 
     async function changeFilters(item) {
@@ -110,6 +101,10 @@
         }
         return newLst;
     }
+
+    getScatterChartData().then(data => {
+        drawScatterPlot(".scatterVis", data);
+    })
   </script>
 </body>
 </html>

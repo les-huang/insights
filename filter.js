@@ -9,7 +9,6 @@ function addFilters(svgClass, data, selectedItem) {
     let itemLst = data;
     var counter = 0;
     for (var item of itemLst) {
-        console.log(item)
         let itemName = item.replace(/\s/g, '');
         svg.append("rect")
             .attr("class", "filter")
@@ -110,4 +109,17 @@ function addFilters(svgClass, data, selectedItem) {
 
         counter++;
     }
+
+    // add fake see more button
+    svg.append("text")
+    .attr("x", (padding/4)+(width-padding)/2)
+    .attr("y", (padding*4)+(rectHeight/2)+7*(10+rectHeight))
+    .text("See more items")
+    .style("fill", "blue")
+    .style("font-family", "Cabin")
+    .style("font-weight", "bold")
+    .style("text-anchor", "middle")
+    .style("alignment-baseline", "middle")
+    .style("font-size", 12)
+    .style("cursor", "pointer")
 }
