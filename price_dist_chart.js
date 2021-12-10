@@ -53,21 +53,25 @@ addAxisText(svg, -1*((width-padding*2)/2)-offset*0.4, offset, "Avg Weekly Units 
 
 // add tooltip for seller's current price + median price
 let sellerPrice = data.seller_current_price;
-// addLineChartToolTip(svg, "seller_tooltip", priceX(sellerPrice), salesY(0), salesY(fakeData[3].sales))
-// addAnnotationText(svg, "seller_tooltip", priceX(3)+padding/2, salesY(fakeData[3].sales)+padding/4, 14, textColor,
-//     [
-//         "your current price"
-//     ]);
-addLineChartToolTip(svg, "median_tooltip", priceX(data.median_price), salesY(0), salesY(getSalesFromPrice(sortedData, data.median_price)), "orange")
-addAnnotationText(svg, "seller_tooltip", priceX(data.median_price)+padding/2, salesY(getSalesFromPrice(sortedData, data.median_price))+padding/4, 14, textColor,
+addLineChartToolTip(svg, "seller_tooltip", priceX(sellerPrice), salesY(0), salesY(extentSales[1])+padding, greenColor)
+addAnnotationText(svg, "seller_tooltip", priceX(sellerPrice)+padding/2, salesY(extentSales[1])+padding*1.25, 12, "black",
+    [
+        "your price"
+    ]);
+console.log(data)
+//salesY(getSalesFromPrice(sortedData, data.median_price))
+addLineChartToolTip(svg, "median_tooltip", priceX(data.median_price), salesY(0), salesY(extentSales[1])-padding/2, "orange")
+addAnnotationText(svg, "seller_tooltip", priceX(data.median_price)+padding/2, salesY(extentSales[1])-padding/4, 12, "black",
     [
         "median price"
     ], true);
-addAnnotationText(svg, "seller_tooltip", svgWidth*0.73, height*0.13, 12, textColor,
+    let dollar = Math.abs(data.seller_current_price - data.median_price).toFixed(2);
+    let qual = (data.seller_current_price > data.median_price) ? "above" : "below";
+addAnnotationText(svg, "seller_tooltip", svgWidth*0.73, height*0.13, 14, textColor,
     [
-        "You are currently charging $x.xx for ",
-        data.item.toLowerCase() + " which is $x.xx",
-        "below the median for similar businesses."
+        "You are currently charging $"+  data.seller_current_price +" for ",
+        data.item.toLowerCase() + " which is $" + dollar,
+        qual + " the median for similar","businesses."
     ], true);
 
 // overlay for mouseover
@@ -95,7 +99,7 @@ svg.append("rect")
             .style("opacity", 1);
         circleText.attr("x", priceX(price))
             .attr("y", salesY(getSalesFromPrice(sortedData, price))-15)
-            .text(getSalesFromPrice(sortedData, price) + " sales")
+            .text(getSalesFromPrice(sortedData, price) + " units at $" + price)
             .style("opacity", 1)
             .style("font-family", "Cabin")
             .style("text-anchor", "middle")
